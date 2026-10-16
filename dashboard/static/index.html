@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Bio Lakehouse — Giám sát tim mạch</title>
+  <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+  <header class="top">
+    <div>
+      <p class="eyebrow">Lakehouse Bronze → Silver → Gold</p>
+      <h1>Giám sát nguy cơ tim mạch thời gian thực</h1>
+    </div>
+    <div id="banner" class="banner ok">Đang chờ dữ liệu stream…</div>
+  </header>
+
+  <nav>
+    <button class="tab active" data-tab="live">Bệnh nhân</button>
+    <button class="tab" data-tab="gold">Gold (1 phút)</button>
+    <button class="tab" data-tab="alerts">Cảnh báo</button>
+    <button class="tab" data-tab="rules">Ngưỡng cảnh báo</button>
+  </nav>
+
+  <section id="live" class="panel active">
+    <div id="cards" class="cards"></div>
+  </section>
+
+  <section id="gold" class="panel">
+    <table>
+      <thead>
+        <tr>
+          <th>Bệnh nhân</th>
+          <th>Cửa sổ</th>
+          <th>HR TB</th>
+          <th>HR max</th>
+          <th>SpO2 min</th>
+          <th>SBP TB</th>
+          <th>n</th>
+        </tr>
+      </thead>
+      <tbody id="gold-body"></tbody>
+    </table>
+  </section>
+
+  <section id="alerts" class="panel">
+    <table>
+      <thead>
+        <tr>
+          <th>Thời điểm</th>
+          <th>BN</th>
+          <th>Mức</th>
+          <th>Rule</th>
+          <th>Nội dung</th>
+        </tr>
+      </thead>
+      <tbody id="alert-body"></tbody>
+    </table>
+  </section>
+
+  <section id="rules" class="panel">
+    <p class="hint">Đây là thay đổi đầu tiên nên làm: hạ ngưỡng nhịp tim rồi đợi banner đỏ trên P005.</p>
+    <form id="th-form" class="form">
+      <label>Nhịp tim cao (bpm) <input name="heart_rate_high" type="number" step="1" /></label>
+      <label>SpO2 thấp (%) <input name="spo2_low" type="number" step="1" /></label>
+      <label>Huyết áp tâm thu <input name="systolic_bp_high" type="number" step="1" /></label>
+      <label>Huyết áp tâm trương <input name="diastolic_bp_high" type="number" step="1" /></label>
+      <label>Nhiệt độ (°C) <input name="temperature_high" type="number" step="0.1" /></label>
+      <label>Cooldown (giây) <input name="cooldown_sec" type="number" step="1" /></label>
+      <button type="submit">Lưu ngưỡng</button>
+      <p id="th-status"></p>
+    </form>
+  </section>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>

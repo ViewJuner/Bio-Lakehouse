@@ -1,0 +1,62 @@
+{
+  "name": "Bio Lakehouse NiFi ETL",
+  "comments": "Import this description into Apache NiFi (see HUONG-DAN-IMPORT.md). Automated docker demo uses nifi/etl.py.",
+  "flow": {
+    "source_topic": "vitals.raw",
+    "destination_topic": "vitals.validated",
+    "bootstrap": "kafka:9092",
+    "processors": [
+      {
+        "name": "ConsumeKafka_vitals_raw",
+        "type": "org.apache.nifi.processors.kafka.pubsub.ConsumeKafka_2_6",
+        "properties": {
+          "bootstrap.servers": "kafka:9092",
+          "topic": "vitals.raw",
+          "group.id": "nifi-ui-demo",
+          "auto.offset.reset": "latest"
+        }
+      },
+      {
+        "name": "ValidateRecord_vitals",
+        "type": "org.apache.nifi.processors.standard.ValidateRecord",
+        "properties": {
+          "required_fields": [
+            "patient_id",
+            "device_id",
+            "ts",
+            "heart_rate",
+            "spo2",
+            "systolic_bp",
+            "diastolic_bp",
+            "temperature"
+          ]
+        }
+      },
+      {
+        "name": "RouteOnAttribute_schema",
+        "type": "org.apache.nifi.processors.standard.RouteOnAttribute",
+        "properties": {
+          "valid": "${valid:equals('true')}"
+        }
+      },
+      {
+        "name": "PublishKafka_vitals_validated",
+        "type": "org.apache.nifi.processors.kafka.pubsub.PublishKafka_2_6",
+        "properties": {
+          "bootstrap.servers": "kafka:9092",
+          "topic": "vitals.validated"
+        }
+      },
+      {
+        "name": "LogAttribute_invalid",
+        "type": "org.apache.nifi.processors.standard.LogAttribute"
+      }
+    ],
+    "connections": [
+      ["ConsumeKafka_vitals_raw", "ValidateRecord_vitals"],
+      ["ValidateRecord_vitals", "RouteOnAttribute_schema"],
+      ["RouteOnAttribute_schema:valid", "PublishKafka_vitals_validated"],
+      ["RouteOnAttribute_schema:unmatched", "LogAttribute_invalid"]
+    ]
+  }
+}

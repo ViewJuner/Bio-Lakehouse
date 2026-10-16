@@ -1,0 +1,3 @@
+create 'patient_latest', 'v'
+list
+describe 'patient_latest'

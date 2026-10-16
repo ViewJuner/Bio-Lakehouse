@@ -1,0 +1,13 @@
+__pycache__/
+*.pyc
+.venv/
+venv/
+.env
+data/
+minio-data/
+mysql-data/
+nifi-data/
+hbase-data/
+*.log
+.DS_Store
+Thumbs.db

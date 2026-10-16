@@ -1,0 +1,7 @@
+.git
+**/__pycache__
+**/*.pyc
+minio-data
+mysql-data
+nifi-data
+hbase-data
