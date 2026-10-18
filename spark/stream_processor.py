@@ -272,11 +272,14 @@ def main():
     print("spark structured streaming (micro-batch 2s) started", flush=True)
     while True:
         raw = []
-        for msg in consumer:
-            try:
-                raw.append(json.loads(msg.value))
-            except json.JSONDecodeError:
-                continue
+        records = consumer.poll(timeout_ms=2000)
+
+        for messages in records.values():
+            for msg in messages:
+                try:
+                    raw.append(json.loads(msg.value))
+                except (json.JSONDecodeError, TypeError):
+                    continue
         if raw:
             b, s = foreach_batch(raw, lake, conn, hbase_ok, windows)
             print(f"batch bronze={b} silver={s}", flush=True)

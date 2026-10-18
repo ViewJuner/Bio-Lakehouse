@@ -95,18 +95,44 @@ class Lakehouse:
         except Exception:
             return self.catalog.load_table(ident)
 
+
     def append(self, table_name: str, rows: list[dict], prefix: str):
         if not rows:
             return
+
         if self.iceberg and table_name in self.tables:
             try:
                 import pyarrow as pa
 
-                table = pa.Table.from_pylist(rows)
-                self.tables[table_name].append(table)
+                table = self.tables[table_name]
+                schema = table.schema().as_arrow()
+
+                valid_rows = [
+                    row for row in rows
+                    if row.get("patient_id") is not None
+                    and str(row.get("patient_id")).strip() != ""
+                ]
+
+                if not valid_rows:
+                    print(
+                        f"iceberg append skipped: no valid patient_id for {table_name}",
+                        flush=True,
+                    )
+                    return
+
+                arrow_table = pa.Table.from_pylist(
+                    valid_rows,
+                    schema=schema,
+                )
+                table.append(arrow_table)
                 return
+
             except Exception as exc:
-                print(f"iceberg append failed, parquet fallback: {exc}", flush=True)
+                print(
+                    f"iceberg append failed, parquet fallback: {exc}",
+                    flush=True,
+                )
+
         self._put_jsonl(prefix, rows)
 
     def _put_jsonl(self, prefix: str, rows: list[dict]):

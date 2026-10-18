@@ -39,8 +39,6 @@ def connect():
 def sample(profile, tick):
     # P005 spikes heart rate every ~40 seconds so the demo always shows an alert.
     hr = profile["hr"] + random.randint(-4, 4)
-    if profile["patient_id"] == "P005" and (tick % 40) < 8:
-        hr = random.randint(128, 148)
     rec = {
         "patient_id": profile["patient_id"],
         "device_id": profile["device_id"],

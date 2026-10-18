@@ -15,6 +15,7 @@ MYSQL = {
     "user": os.environ.get("MYSQL_USER", "bio"),
     "password": os.environ.get("MYSQL_PASSWORD", "bio"),
     "database": os.environ.get("MYSQL_DB", "biolake"),
+    "charset": "utf8mb4",
     "cursorclass": pymysql.cursors.DictCursor,
 }
 THRESHOLDS_PATH = os.environ.get("THRESHOLDS_PATH", "/app/thresholds.yaml")

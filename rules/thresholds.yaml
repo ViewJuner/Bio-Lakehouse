@@ -1,10 +1,7 @@
-# Best first change: lower heart_rate_high (e.g. 90) then:
-#   docker compose restart rules
-# or edit this file from the dashboard "Ngưỡng cảnh báo" page.
-
-heart_rate_high: 120
-spo2_low: 92
-systolic_bp_high: 180
-diastolic_bp_high: 110
+# Updated from dashboard
+heart_rate_high: 120.0
+spo2_low: 92.0
+systolic_bp_high: 180.0
+diastolic_bp_high: 110.0
 temperature_high: 38.5
-cooldown_sec: 20
+cooldown_sec: 20.0
